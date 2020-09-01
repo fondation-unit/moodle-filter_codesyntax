@@ -9,16 +9,13 @@ class filter_codesyntax extends moodle_text_filter {
      * @return string text after processing
      */
     public function filter($text, array $options = array()) {
-        $search = "((content-prog [a-z0-9 -]+))is";
-        $result = preg_replace_callback($search, array($this, 'filter_content_prog_callback'), $text);
-        return $result;
-    }
-
-    private function filter_content_prog_callback($matches) {
         global $PAGE;
 
-        if (!empty($matches[1])) {
+        $search = "((language-[a-z0-9 -]+))is";
+        preg_match($search, $text, $matches, PREG_OFFSET_CAPTURE);
+        if (!empty($matches[0])) {
             $PAGE->requires->js_call_amd('filter_codesyntax/prism', 'init');
         }
+        return $text;
     }
 }
